@@ -16,7 +16,7 @@ jobs:
     - name: Merge Master
       run: |
         git remote update
-        if git merge-base --is-ancestor origin/master ${{ github.event.pull_request.head.sha }}; then
+        if git merge-base --is-ancestor origin/main ${{ github.event.pull_request.head.sha }}; then
           echo "Branch is up to date with master"
         else
           echo "Branch is not up to date with master"
