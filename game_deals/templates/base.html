@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+<div id="header">
+    <h1>Game deals</h1>
+     {% if request.user.is_authenticated %}
+         <ul>
+             <li>
+                <a href="{% url "profile_dashboard" %}">Panel użytkownika</a>
+             </li>
+         </ul>
+    {% endif %}
+     <span>
+         {% if request.user.is_authenticated %}
+             Witaj, {{ request.user.first_name }}!
+             <a href="{% url "logout" %}">Wyloguj</a>
+         {% else %}
+             <a href="{% url "login" %}">Zaloguj</a>
+         {% endif %}
+     </span>
+</div>
+
+
+<div id="content">
+    {% block content %}
+    {% endblock %}
+</div>
+</body>
+</html>
