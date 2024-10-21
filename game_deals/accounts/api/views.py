@@ -1,3 +1,4 @@
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -29,7 +30,7 @@ class Login(APIView):
                              "last_name": user.last_name,
                              }, status=status.HTTP_200_OK)
         except ValidationError as e:
-            error_message = str(e.detail['non_field_errors'][0])
+            error_message = str(e)
             return Response({'error': error_message}, status=status.HTTP_400_BAD_REQUEST)
         except Exception:
             return Response({'error': 'Internal Error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -38,3 +39,15 @@ class Register(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = (AllowAny,)
     serializer_class = RegisterSerializer
+
+
+class Logout(APIView):
+    permission_classes = []
+    authentication_classes = [TokenAuthentication]
+
+    def post(self, request):
+        try:
+            request.user.auth_token.delete()
+            return Response({'message': 'Successfully logged out.'}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
